@@ -16,7 +16,7 @@ app.post('/send-reset-email', async (req, res) => {
 
   const token = require('crypto').randomUUID(); // o usa uuidv4() si prefieres
 
-  const resetLink = `const resetLink = `https://buspoint-frontend.onrender.com/reset-password?token=${token}`;
+  const resetLink =`https://buspoint-frontend.onrender.com/reset-password?token=${token}`;
   
   const transporter = nodemailer.createTransport({
     service: 'gmail',
