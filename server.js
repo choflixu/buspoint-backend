@@ -49,5 +49,12 @@ app.post('/send-reset-email', async (req, res) => {
     console.error("Error enviando correo:", error);
     res.status(500).json({ error: 'No se pudo enviar el correo' });
   }
+
+
+  const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
+
 });
 
