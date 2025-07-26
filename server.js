@@ -7,7 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Ruta raíz para evitar "Cannot GET /"
+// ✅ Esta línea permite servir archivos estáticos como redirect.html
+app.use(express.static('public'));
+
+// ✅ Ruta raíz
 app.get('/', (req, res) => {
   res.send('🚀 Servidor de BusPoint activo y funcionando');
 });
@@ -20,8 +23,10 @@ app.post('/send-reset-email', async (req, res) => {
   }
 
   const token = require('crypto').randomUUID();
-  const resetLink = `buspoint://reset-password?token=${token}`;
-  
+
+  // Enlace que abrirá una página web que redirige a tu app
+  const resetLink = `https://buspoint-backend.onrender.com/redirect.html?token=${token}`;
+
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
