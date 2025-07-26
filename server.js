@@ -51,11 +51,15 @@ app.post('/send-reset-email', async (req, res) => {
   try {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Correo enviado correctamente' });
-  } catch (error) {
-    console.error("Error enviando correo:", error);
-    res.status(500).json({ error: 'No se pudo enviar el correo' });
+  } } catch (error) {
+  console.error("❌ Error enviando correo:");
+  console.error("Mensaje completo:", error.message);
+  console.error("Stack:", error.stack);
+  if (error.response) {
+    console.error("SMTP Response:", error.response);
   }
-});
+  res.status(500).json({ error: 'No se pudo enviar el correo' });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
