@@ -7,7 +7,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Ruta raíz para evitar "Cannot GET /"
+// ✅ Servir archivos estáticos (como redirect.html)
+app.use(express.static('public'));
+
+// ✅ Ruta raíz
 app.get('/', (req, res) => {
   res.send('🚀 Servidor de BusPoint activo y funcionando');
 });
@@ -20,13 +23,14 @@ app.post('/send-reset-email', async (req, res) => {
   }
 
   const token = require('crypto').randomUUID();
-  const resetLink = `buspoint://reset-password?token=${token}`;
-  
+
+  const resetLink = `https://buspoint-backend.onrender.com/redirect.html?token=${token}`;
+
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      pass: process.env.EMAIL_PASS,
     }
   });
 
@@ -47,11 +51,17 @@ app.post('/send-reset-email', async (req, res) => {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Correo enviado correctamente' });
   } catch (error) {
-    console.error("Error enviando correo:", error);
+    console.error("❌ Error enviando correo:");
+    console.error("Mensaje completo:", error.message);
+    console.error("Stack:", error.stack);
+    if (error.response) {
+      console.error("SMTP Response:", error.response);
+    }
     res.status(500).json({ error: 'No se pudo enviar el correo' });
   }
 });
 
+// ✅ Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
