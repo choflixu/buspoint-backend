@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Esta línea permite servir archivos estáticos como redirect.html
+// ✅ Servir archivos estáticos (como redirect.html)
 app.use(express.static('public'));
 
 // ✅ Ruta raíz
@@ -24,14 +24,13 @@ app.post('/send-reset-email', async (req, res) => {
 
   const token = require('crypto').randomUUID();
 
-  // Enlace que abrirá una página web que redirige a tu app
   const resetLink = `https://buspoint-backend.onrender.com/redirect.html?token=${token}`;
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
+      pass: process.env.EMAIL_PASS,
     }
   });
 
@@ -51,16 +50,18 @@ app.post('/send-reset-email', async (req, res) => {
   try {
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Correo enviado correctamente' });
-  } } catch (error) {
-  console.error("❌ Error enviando correo:");
-  console.error("Mensaje completo:", error.message);
-  console.error("Stack:", error.stack);
-  if (error.response) {
-    console.error("SMTP Response:", error.response);
+  } catch (error) {
+    console.error("❌ Error enviando correo:");
+    console.error("Mensaje completo:", error.message);
+    console.error("Stack:", error.stack);
+    if (error.response) {
+      console.error("SMTP Response:", error.response);
+    }
+    res.status(500).json({ error: 'No se pudo enviar el correo' });
   }
-  res.status(500).json({ error: 'No se pudo enviar el correo' });
+});
 
-
+// ✅ Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
