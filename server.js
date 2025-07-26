@@ -7,6 +7,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ Ruta raíz para evitar "Cannot GET /"
+app.get('/', (req, res) => {
+  res.send('🚀 Servidor de BusPoint activo y funcionando');
+});
+
 app.post('/send-reset-email', async (req, res) => {
   const { email } = req.body;
 
@@ -15,7 +20,6 @@ app.post('/send-reset-email', async (req, res) => {
   }
 
   const token = require('crypto').randomUUID();
-
   const resetLink = `https://buspoint-backend.onrender.com/reset-password?token=${token}`;
   
   const transporter = nodemailer.createTransport({
@@ -40,8 +44,6 @@ app.post('/send-reset-email', async (req, res) => {
   };
 
   try {
-    // Aquí iría la lógica para guardar el token en Firestore u otra base de datos
-
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Correo enviado correctamente' });
   } catch (error) {
@@ -50,7 +52,6 @@ app.post('/send-reset-email', async (req, res) => {
   }
 });
 
-// 🟢 Esto debe ir fuera de cualquier endpoint
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
