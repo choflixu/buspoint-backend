@@ -20,7 +20,7 @@ app.post('/send-reset-email', async (req, res) => {
   }
 
   const token = require('crypto').randomUUID();
-  const resetLink = `https://buspoint-front.vercel.app/reset-password?token=${token}`;
+  const resetLink = `buspoint://reset-password?token=${token}`;
   
   const transporter = nodemailer.createTransport({
     service: 'gmail',
