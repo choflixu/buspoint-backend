@@ -14,9 +14,9 @@ app.post('/send-reset-email', async (req, res) => {
     return res.status(400).json({ error: 'Email es obligatorio' });
   }
 
-  const token = require('crypto').randomUUID(); // o usa uuidv4() si prefieres
+  const token = require('crypto').randomUUID();
 
-  const resetLink =`https://buspoint-backend.onrender.com/reset-password?token=${token}`;
+  const resetLink = `https://buspoint-backend.onrender.com/reset-password?token=${token}`;
   
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -40,8 +40,7 @@ app.post('/send-reset-email', async (req, res) => {
   };
 
   try {
-    // 🔐 Guarda el token en tu base de datos con Firestore o MongoDB aquí
-    // await db.collection("password_resets").add({ email, token, createdAt, used: false })
+    // Aquí iría la lógica para guardar el token en Firestore u otra base de datos
 
     await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'Correo enviado correctamente' });
@@ -49,12 +48,10 @@ app.post('/send-reset-email', async (req, res) => {
     console.error("Error enviando correo:", error);
     res.status(500).json({ error: 'No se pudo enviar el correo' });
   }
+});
 
-
-  const PORT = process.env.PORT || 3000;
+// 🟢 Esto debe ir fuera de cualquier endpoint
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
-
-});
-
