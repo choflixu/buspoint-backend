@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Redireccionando...</title>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      window.location.href = `buspoint://reset-password?token=${token}`;
+    } else {
+      document.body.innerHTML = "<h2>Error: token inválido.</h2>";
+    }
+  </script>
+</head>
+<body>
+  <p>Redireccionando a la app de BusPoint...</p>
+</body>
+</html>
